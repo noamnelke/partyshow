@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PartyShow Display</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        #featured-photo {
+            width: 80%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #featured-photo img {
+            max-width: 100%;
+            max-height: 80vh; /* Adjust as needed */
+            object-fit: contain; /* Preserve aspect ratio */
+            border: 5px solid #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            background-color: #000; /* Fallback background */
+            opacity: 0; /* Initially hidden */
+            transition: opacity 1s ease-in-out; /* Smooth fade-in and fade-out */
+            display: block; /* Remove any inline spacing */
+        }
+        /* Class to handle visible state */
+        .visible {
+            opacity: 1 !important;
+        }
+        #bubbles-container {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: calc(100% - 180px); /* Adjust for bubble width */
+            height: 100%;
+        }
+        .bubble {
+            position: absolute; /* Enable absolute positioning */
+            bottom: 0;
+            width: 180px;
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 1);
+            animation: rise 100s forwards;
+            opacity: 0.8;
+        }
+        @keyframes rise {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-200px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="featured-photo">
+        <img id="featured-img" src="" alt="Featured Photo">
+    </div>
+    <div id="bubbles-container"></div>
+
+    <script>
+        // Connect to the specified namespace
+        const socket = io('/', { path: '/socket.io' });
+
+        let photoQueue = [];
+        let featuredPhotos = [];
+        let currentFeaturedIndex = 0;
+        const displayDuration = 5000; // 5 seconds in milliseconds
+
+        const featuredImg = document.getElementById('featured-img');
+        const bubblesContainer = document.getElementById('bubbles-container');
+
+        /**
+         * Preloads an image and updates the featured image upon successful loading.
+         * @param {Object} photo - The photo object containing 'path' and 'filename'.
+         */
+        function showFeaturedPhoto(photo) {
+            console.log('Preloading photo:', photo.path);
+            const img = new Image();
+            img.src = photo.path;
+
+            img.onload = () => {
+                console.log('Photo loaded:', photo.path);
+                // Remove 'visible' class to initiate fade-out
+                featuredImg.classList.remove('visible');
+
+                // After the fade-out transition completes, update the src and fade back in
+                setTimeout(() => {
+                    featuredImg.src = photo.path;
+                    featuredImg.alt = photo.filename;
+                    featuredImg.classList.add('visible');
+                }, 1000); // Match this timeout with the CSS transition duration
+            };
+
+            img.onerror = () => {
+                console.error('Failed to load photo:', photo.path);
+            };
+        }
+
+        /**
+         * Adds a bubble animation for the new photo.
+         * @param {Object} photo - The photo object containing 'path' and 'filename'.
+         */
+        function addBubble(photo) {
+            console.log('Adding bubble for photo:', photo.path);
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            bubble.style.backgroundImage = `url(${photo.path})`;
+            
+            // Generate a random horizontal position within the viewport
+            const randomX = Math.random() * 100;
+            bubble.style.left = `${randomX}%`;
+            
+            bubblesContainer.appendChild(bubble);
+
+            // Remove bubble after animation
+            bubble.addEventListener('animationend', () => {
+                bubblesContainer.removeChild(bubble);
+            });
+        }
+
+        /**
+         * Starts the slideshow by displaying the current featured photo and scheduling the next one.
+         */
+        function startSlideshow() {
+            if (photoQueue.length === 0) {
+                console.log('Photo queue is empty. Slideshow not started.');
+                return;
+            }
+            console.log('Starting slideshow with photo index:', currentFeaturedIndex);
+            showFeaturedPhoto(photoQueue[currentFeaturedIndex]);
+            currentFeaturedIndex = (currentFeaturedIndex + 1) % photoQueue.length;
+            setTimeout(startSlideshow, displayDuration);
+        }
+
+        // Initial connection to the server
+        socket.on('connect', () => {
+            console.log('Connected to server');
+        });
+
+        // Receive the initial state containing the photo queue and featured photos
+        socket.on('initial_state', data => {
+            console.log('Received initial state:', data);
+            photoQueue = data.photo_queue;
+            featuredPhotos = data.featured_photos;
+            if (photoQueue.length > 0) {
+                startSlideshow();
+            }
+        });
+
+        // Receive new photos in real-time
+        socket.on('new_photo', photo => {
+            console.log('Received new photo:', photo);
+            if (photoQueue.length < 1000) { // Set a high limit if you want no practical limit
+                photoQueue.push(photo);
+                addBubble(photo);
+                if (photoQueue.length === 1) {
+                    startSlideshow();
+                }
+            } else {
+                console.log('Photo queue is full. New photo not added:', photo.path);
+            }
+        });
+
+        // Handle disconnections gracefully
+        socket.on('disconnect', () => {
+            console.log('Disconnected from server. Attempting to reconnect...');
+        });
+
+        // Optionally, handle reconnection events
+        socket.on('reconnect', (attemptNumber) => {
+            console.log('Reconnected to server after', attemptNumber, 'attempt(s)');
+        });
+    </script>
+</body>
+</html>
