@@ -12,7 +12,6 @@ socketio = SocketIO(app)
 
 # In-memory state management
 photo_queue = []
-featured_photos = []
 
 UPLOAD_FOLDER = 'static/uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -73,7 +72,7 @@ def upload():
 
 @socketio.on('connect', namespace='/')
 def handle_connect():
-    emit('initial_state', {'photo_queue': photo_queue, 'featured_photos': featured_photos})
+    emit('initial_state', {'photo_queue': photo_queue})
     print("Client connected and initial state emitted.")
 
 if __name__ == '__main__':

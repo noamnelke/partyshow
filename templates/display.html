@@ -83,7 +83,6 @@
 
         let photoQueue = [];
         let newPhotos = [];
-        let featuredPhotos = [];
         let currentFeaturedIndex = 0;
         const displayDuration = 15000; // 15 seconds in milliseconds
         let photoQueueLength = 0;
@@ -182,11 +181,10 @@
             console.log('Connected to server');
         });
 
-        // Receive the initial state containing the photo queue and featured photos
+        // Receive the initial state containing the photo queue
         socket.on('initial_state', data => {
             console.log('Received initial state:', data);
             photoQueue = data.photo_queue;
-            featuredPhotos = data.featured_photos;
             photoQueueLength = photoQueue.length;
             if (photoQueue.length > 0) {
                 startSlideshow();
