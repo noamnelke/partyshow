@@ -122,20 +122,29 @@
          */
         function addBubble(photo) {
             console.log('Adding bubble for photo:', photo.path);
-            const bubble = document.createElement('div');
-            bubble.classList.add('bubble');
-            bubble.style.backgroundImage = `url(${photo.path})`;
-            
-            // Generate a random horizontal position within the viewport
-            const randomX = Math.random() * 100;
-            bubble.style.left = `${randomX}%`;
-            
-            bubblesContainer.appendChild(bubble);
+            const img = new Image();
+            img.src = photo.path;
 
-            // Remove bubble after animation
-            bubble.addEventListener('animationend', () => {
-                bubblesContainer.removeChild(bubble);
-            });
+            img.onload = () => {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                bubble.style.backgroundImage = `url(${photo.path})`;
+
+                // Generate a random horizontal position within the viewport
+                const randomX = Math.random() * 100;
+                bubble.style.left = `${randomX}%`;
+
+                bubblesContainer.appendChild(bubble);
+
+                // Remove bubble after animation
+                bubble.addEventListener('animationend', () => {
+                    bubblesContainer.removeChild(bubble);
+                });
+            };
+
+            img.onerror = () => {
+                console.error('Failed to load bubble image:', photo.path);
+            };
         }
 
         /**
