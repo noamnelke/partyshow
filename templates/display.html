@@ -73,13 +73,25 @@
                 opacity: 0;
             }
         }
+        .qr {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 120px;
+            height: 120px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 </head>
 <body>
     <div id="featured-photo">
         <img id="featured-img" src="" alt="Featured Photo">
     </div>
     <div id="bubbles-container"></div>
+
+    <canvas class="qr" id="qr"></canvas>
 
     <script>
         // Connect to the specified namespace
@@ -229,6 +241,18 @@
         document.addEventListener('keydown', resetIdleTimer);
 
         resetIdleTimer(); // Initialize the timer on page load
+
+        // QR Code Generation
+        (function () {
+            var qr = new QRious({
+                element: document.getElementById('qr'),
+                value: 'http://192.168.68.63:5001/upload',
+                size: 120,
+                background: 'black',
+                backgroundAlpha: 0.5,
+                foreground: 'gold',
+            });
+        })();
 
     </script>
 </body>
