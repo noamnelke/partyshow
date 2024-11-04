@@ -8,6 +8,10 @@
         body {
             margin: 0;
             background-color: #000;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.8)), url('{{ url_for('static', filename='images/curtain.png') }}');
+            background-position: bottom center;
+            background-attachment: fixed;
+            background-size: cover;
             display: flex;
             justify-content: center;
             align-items: center;
