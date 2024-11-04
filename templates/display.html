@@ -82,9 +82,11 @@
         const socket = io('/', { path: '/socket.io' });
 
         let photoQueue = [];
+        let newPhotos = [];
         let featuredPhotos = [];
         let currentFeaturedIndex = 0;
         const displayDuration = 15000; // 15 seconds in milliseconds
+        let photoQueueLength = 0;
 
         const featuredImg = document.getElementById('featured-img');
         const bubblesContainer = document.getElementById('bubbles-container');
@@ -151,14 +153,28 @@
          * Starts the slideshow by displaying the current featured photo and scheduling the next one.
          */
         function startSlideshow() {
-            if (photoQueue.length === 0) {
-                console.log('Photo queue is empty. Slideshow not started.');
+            if (photoQueue.length === 0 && newPhotos.length === 0) {
+                console.log('Photo queues are empty. Slideshow not started.');
                 return;
             }
-            console.log('Starting slideshow with photo index:', currentFeaturedIndex);
-            showFeaturedPhoto(photoQueue[currentFeaturedIndex]);
-            currentFeaturedIndex = (currentFeaturedIndex + 1) % photoQueue.length;
+
+            let nextPhoto;
+            if (newPhotos.length > 0) {
+                nextPhoto = newPhotos.shift();
+                photoQueue.push(nextPhoto);
+            } else {
+                nextPhoto = photoQueue[currentFeaturedIndex];
+                currentFeaturedIndex = (currentFeaturedIndex + 1) % photoQueueLength;
+            }
+
+            console.log('Starting slideshow with photo:', nextPhoto);
+            showFeaturedPhoto(nextPhoto);
             setTimeout(startSlideshow, displayDuration);
+
+            // Update the stored length of the photoQueue
+            if (currentFeaturedIndex === 0) {
+                photoQueueLength = photoQueue.length;
+            }
         }
 
         // Initial connection to the server
@@ -171,6 +187,7 @@
             console.log('Received initial state:', data);
             photoQueue = data.photo_queue;
             featuredPhotos = data.featured_photos;
+            photoQueueLength = photoQueue.length;
             if (photoQueue.length > 0) {
                 startSlideshow();
             }
@@ -179,14 +196,10 @@
         // Receive new photos in real-time
         socket.on('new_photo', photo => {
             console.log('Received new photo:', photo);
-            if (photoQueue.length < 1000) { // Set a high limit if you want no practical limit
-                photoQueue.push(photo);
-                addBubble(photo);
-                if (photoQueue.length === 1) {
-                    startSlideshow();
-                }
-            } else {
-                console.log('Photo queue is full. New photo not added:', photo.path);
+            newPhotos.push(photo);
+            addBubble(photo);
+            if (photoQueue.length === 0 && newPhotos.length === 1) {
+                startSlideshow();
             }
         });
 
