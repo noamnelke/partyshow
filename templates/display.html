@@ -15,6 +15,9 @@
             overflow: hidden;
             position: relative;
         }
+        body.idle {
+            cursor: none;
+        }
         #featured-photo {
             width: 80%;
             display: flex;
@@ -187,6 +190,22 @@
         socket.on('reconnect', (attemptNumber) => {
             console.log('Reconnected to server after', attemptNumber, 'attempt(s)');
         });
+
+        let idleTimeout;
+
+        function resetIdleTimer() {
+            document.body.classList.remove('idle');
+            clearTimeout(idleTimeout);
+            idleTimeout = setTimeout(() => {
+                document.body.classList.add('idle');
+            }, 3000); // 3 seconds
+        }
+
+        document.addEventListener('mousemove', resetIdleTimer);
+        document.addEventListener('keydown', resetIdleTimer);
+
+        resetIdleTimer(); // Initialize the timer on page load
+
     </script>
 </body>
 </html>
