@@ -94,6 +94,15 @@
     <canvas class="qr" id="qr"></canvas>
 
     <script>
+        // Logging mechanism
+        const loggingEnabled = false; // Set to true to enable logging
+
+        function log(...args) {
+            if (loggingEnabled) {
+                console.log(...args);
+            }
+        }
+
         // Connect to the specified namespace
         const socket = io('/', { path: '/socket.io' });
 
@@ -111,12 +120,12 @@
          * @param {Object} photo - The photo object containing 'path' and 'filename'.
          */
         function showFeaturedPhoto(photo) {
-            console.log('Preloading photo:', photo.path);
+            log('Preloading photo:', photo.path);
             const img = new Image();
             img.src = photo.path;
 
             img.onload = () => {
-                console.log('Photo loaded:', photo.path);
+                log('Photo loaded:', photo.path);
                 // Remove 'visible' class to initiate fade-out
                 featuredImg.classList.remove('visible');
 
@@ -138,7 +147,7 @@
          * @param {Object} photo - The photo object containing 'path' and 'filename'.
          */
         function addBubble(photo) {
-            console.log('Adding bubble for photo:', photo.path);
+            log('Adding bubble for photo:', photo.path);
             const img = new Image();
             img.src = photo.path;
 
@@ -169,7 +178,7 @@
          */
         function startSlideshow() {
             if (photoQueue.length === 0 && newPhotos.length === 0) {
-                console.log('Photo queues are empty. Slideshow not started.');
+                log('Photo queues are empty. Slideshow not started.');
                 return;
             }
 
@@ -182,7 +191,7 @@
                 currentFeaturedIndex = (currentFeaturedIndex + 1) % photoQueueLength;
             }
 
-            console.log('Starting slideshow with photo:', nextPhoto);
+            log('Starting slideshow with photo:', nextPhoto);
             showFeaturedPhoto(nextPhoto);
             setTimeout(startSlideshow, displayDuration);
 
@@ -194,12 +203,12 @@
 
         // Initial connection to the server
         socket.on('connect', () => {
-            console.log('Connected to server');
+            log('Connected to server');
         });
 
         // Receive the initial state containing the photo queue
         socket.on('initial_state', data => {
-            console.log('Received initial state:', data);
+            log('Received initial state:', data);
             photoQueue = data.photo_queue;
             photoQueueLength = photoQueue.length;
             if (photoQueue.length > 0) {
@@ -209,7 +218,7 @@
 
         // Receive new photos in real-time
         socket.on('new_photo', photo => {
-            console.log('Received new photo:', photo);
+            log('Received new photo:', photo);
             newPhotos.push(photo);
             addBubble(photo);
             if (photoQueue.length === 0 && newPhotos.length === 1) {
@@ -219,12 +228,12 @@
 
         // Handle disconnections gracefully
         socket.on('disconnect', () => {
-            console.log('Disconnected from server. Attempting to reconnect...');
+            log('Disconnected from server. Attempting to reconnect...');
         });
 
         // Optionally, handle reconnection events
         socket.on('reconnect', (attemptNumber) => {
-            console.log('Reconnected to server after', attemptNumber, 'attempt(s)');
+            log('Reconnected to server after', attemptNumber, 'attempt(s)');
         });
 
         let idleTimeout;
