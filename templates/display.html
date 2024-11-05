@@ -11,7 +11,14 @@
     <img id="featured-img" src="" alt="Featured Photo">
     <div id="bubbles-container"></div>
 
-    <canvas class="qr" id="qr"></canvas>
+    <div class="qr-container left">
+        <h2>Connect to WiFi</h2>
+        <canvas class="qr" id="qr-wifi"></canvas>
+    </div>
+    <div class="qr-container right">
+        <h2>Upload Photos</h2>
+        <canvas class="qr" id="qr-upload"></canvas>
+    </div>
 
     <script src="{{ url_for('static', filename='js/display.js') }}"></script>
 </body>

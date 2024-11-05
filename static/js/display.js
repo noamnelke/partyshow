@@ -156,13 +156,16 @@ document.addEventListener('keydown', resetIdleTimer);
 resetIdleTimer(); // Initialize the timer on page load
 
 // QR Code Generation
-(function () {
+function generateQR(id, value) {
     var qr = new QRious({
-        element: document.getElementById('qr'),
-        value: 'https://partyshow.xyz/upload',
-        size: 170,
+        element: document.getElementById(id),
+        value: value,
+        size: 1000,
         background: 'black',
-        backgroundAlpha: 0.5,
+        backgroundAlpha: 0,
         foreground: 'gold',
     });
-})();
+};
+
+generateQR('qr-upload', 'https://partyshow.xyz/upload');
+generateQR('qr-wifi', 'WIFI:T:WPA;S:Honeypot;P:050-7700593;');
