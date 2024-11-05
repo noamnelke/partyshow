@@ -1,0 +1,77 @@
+body {
+    margin: 0;
+    background-color: #000;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.8)), url('/static/images/curtain.png');
+    background-position: bottom center;
+    background-attachment: fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+body.idle {
+    cursor: none;
+}
+#featured-photo {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#featured-photo img {
+    max-width: 100%;
+    max-height: 80vh; /* Adjust as needed */
+    object-fit: contain; /* Preserve aspect ratio */
+    border: 5px solid #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    background-color: #000; /* Fallback background */
+    opacity: 0; /* Initially hidden */
+    transition: opacity 1s ease-in-out; /* Smooth fade-in and fade-out */
+    display: block; /* Remove any inline spacing */
+}
+/* Class to handle visible state */
+.visible {
+    opacity: 1 !important;
+}
+#bubbles-container {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    width: calc(100% - 180px); /* Adjust for bubble width */
+    height: 100%;
+}
+.bubble {
+    position: absolute; /* Enable absolute positioning */
+    bottom: 0;
+    width: 180px;
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 1);
+    animation: rise 45s forwards;
+    opacity: 0.8;
+}
+@keyframes rise {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-200px);
+        opacity: 0;
+    }
+}
+.qr {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 200px;
+    max-width: 15%;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
