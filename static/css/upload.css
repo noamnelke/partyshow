@@ -1,0 +1,54 @@
+.button-container {
+    position: fixed;
+    bottom: env(safe-area-inset-bottom);
+    width: 100%;
+    max-width: 400px; /* Limits the maximum width on larger screens */
+}
+
+.upload-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    margin: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #fff;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    overflow: hidden; /* Ensures content doesn't overflow */
+    background-color: #4CAF50;
+}
+
+.upload-button:hover {
+    background-color: #45a049;
+}
+
+.button-container input {
+    display: none; /* Hides the actual file input elements */
+}
+
+.button-container svg {
+    margin-right: 8px;
+    width: 20px;
+    height: 20px;
+    fill: currentColor; /* Inherits the text color */
+}
+
+.img-container {
+    display: flex;
+    position: fixed;
+    top: 0;
+    bottom: env(safe-area-inset-bottom);
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 70px;
+}
+
+#featured-img {
+    max-height: calc(90vh - 77px);
+}

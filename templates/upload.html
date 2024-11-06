@@ -6,80 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"> <!-- Ensures proper scaling on mobile -->
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
-    <style>
-        .button-container {
-            position: fixed;
-            bottom: env(safe-area-inset-bottom);
-            width: 100%;
-            max-width: 400px; /* Limits the maximum width on larger screens */
-        }
-
-        .upload-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 50px;
-            margin: 20px;
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            color: #fff;
-            transition: background-color 0.3s ease;
-            text-decoration: none;
-            overflow: hidden; /* Ensures content doesn't overflow */
-            background-color: #4CAF50;
-        }
-
-        .upload-button:hover {
-            background-color: #45a049;
-        }
-
-        .button-container input {
-            display: none; /* Hides the actual file input elements */
-        }
-
-        .button-container svg {
-            margin-right: 8px;
-            width: 20px;
-            height: 20px;
-            fill: currentColor; /* Inherits the text color */
-        }
-
-        /* Responsive Adjustments for Very Small Screens */
-        @media (max-width: 300px) {
-            .upload-button {
-                font-size: 14px;
-                height: 45px;
-                padding: 0 5px;
-            }
-
-            .button-container svg {
-                width: 18px;
-                height: 18px;
-                margin-right: 5px;
-            }
-        }
-
-        .img-container {
-            display: flex;
-            position: fixed;
-            top: 0;
-            bottom: env(safe-area-inset-bottom);
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 70px;
-        }
-        #featured-img {
-            max-height: calc(90vh - 77px);
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/upload.css') }}"> <!-- Link to the new CSS file -->
 </head>
 <body>
     <div class="img-container">
-        <img id="featured-img" src="/static/uploads/1730714175__WhatsApp%20Image%202024-11-02%20at%2018.05.00.jpeg" class="visible" alt="Featured Photo">
+        <img id="featured-img" src="" alt="Featured Photo">
     </div>
 
     <div class="button-container">
@@ -98,15 +29,6 @@
         </form>
     </div>
 
-    <script>
-        // Function to submit the form when a file is selected
-        function handleInputChange(event) {
-            const form = document.getElementById('upload-form');
-            form.submit();
-        }
-
-        // Attach event listener to the file input
-        document.getElementById('upload-input').addEventListener('change', handleInputChange);
-    </script>
+    <script type="module" src="{{ url_for('static', filename='js/upload.js') }}"></script> <!-- Link to the new JS file as a module -->
 </body>
 </html>

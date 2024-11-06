@@ -70,6 +70,10 @@ def upload():
             return "Invalid file type.", 400
     return render_template('upload.html')
 
+@app.route('/queue')
+def queue():
+    return {'photo_queue': photo_queue}
+
 @socketio.on('connect', namespace='/')
 def handle_connect():
     emit('initial_state', {'photo_queue': photo_queue})
