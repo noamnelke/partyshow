@@ -72,7 +72,7 @@ def upload():
 
 @app.route('/queue')
 def queue():
-    return {'photo_queue': photo_queue}
+    return {'photo_queue': [photo_queue[-1]] + photo_queue[:-1] if photo_queue else []}
 
 @socketio.on('connect', namespace='/')
 def handle_connect():
