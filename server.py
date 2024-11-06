@@ -49,25 +49,25 @@ def display():
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
-        if 'photo' not in request.files:
+        if 'photos' not in request.files:
             return redirect(request.url)
-        file = request.files['photo']
-        if file.filename == '':
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            # Prepend timestamp to filename to ensure uniqueness
-            timestamp = int(time.time())
-            filename, ext = os.path.splitext(file.filename)
-            unique_filename = f"{timestamp}__{filename}{ext}"
-            filepath = os.path.join(UPLOAD_FOLDER, unique_filename).replace('\\', '/')
-            file.save(filepath)
-            photo = {'filename': unique_filename, 'path': '/' + quote(filepath)}
-            photo_queue.append(photo)
-            emit('new_photo', photo, broadcast=True, namespace='/')
-            return redirect(url_for('upload'))
-        else:
-            print("Invalid file type attempted to be uploaded.")
-            return "Invalid file type.", 400
+        files = request.files.getlist('photos')
+        for file in files:
+            if file.filename == '':
+                continue
+            if file and allowed_file(file.filename):
+                # Prepend timestamp to filename to ensure uniqueness
+                timestamp = int(time.time())
+                filename, ext = os.path.splitext(file.filename)
+                unique_filename = f"{timestamp}__{filename}{ext}"
+                filepath = os.path.join(UPLOAD_FOLDER, unique_filename).replace('\\', '/')
+                file.save(filepath)
+                photo = {'filename': unique_filename, 'path': '/' + quote(filepath)}
+                photo_queue.append(photo)
+                emit('new_photo', photo, broadcast=True, namespace='/')
+            else:
+                print("Invalid file type attempted to be uploaded.")
+        return redirect(url_for('upload'))
     return render_template('upload.html')
 
 @app.route('/queue')
