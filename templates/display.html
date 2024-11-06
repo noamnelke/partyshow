@@ -7,6 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/display.css') }}">
+    <script type="module" src="{{ url_for('static', filename='js/slideshow.js') }}"></script>
 </head>
 <body>
     <img id="featured-img" src="" alt="Featured Photo">
@@ -21,6 +22,6 @@
         <canvas class="qr" id="qr-upload"></canvas>
     </div>
 
-    <script src="{{ url_for('static', filename='js/display.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/display.js') }}"></script>
 </body>
 </html>
