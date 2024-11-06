@@ -1,0 +1,33 @@
+body {
+    margin: 0;
+    background-color: #000;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.8)), url('/static/images/curtain.png');
+    background-position: bottom center;
+    background-attachment: fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+body.idle {
+    cursor: none;
+}
+#featured-img {
+    max-width: 90%;
+    max-height: 90vh; /* Adjust as needed */
+    object-fit: contain; /* Preserve aspect ratio */
+    border: 5px solid #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    background-color: #000; /* Fallback background */
+    opacity: 0; /* Initially hidden */
+    transition: opacity 1s ease-in-out; /* Smooth fade-in and fade-out */
+    display: block; /* Remove any inline spacing */
+}
+/* Class to handle visible state */
+.visible {
+    opacity: 1 !important;
+}

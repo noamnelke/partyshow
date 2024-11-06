@@ -3,37 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Upload Photo</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ensures proper scaling on mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"> <!-- Ensures proper scaling on mobile -->
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
     <style>
-        * {
-            box-sizing: border-box; /* Ensures padding and borders are included in element's total width and height */
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            display: flex;
-            height: 100vh;
-            justify-content: center;
-            align-items: center;
-            background-color: #f0f0f0;
-            flex-direction: column;
-            font-family: Arial, sans-serif;
-            padding: 10px; /* Prevents content from touching screen edges */
-            overflow: hidden; /* Prevents scrolling */
-        }
-
-        h1 {
-            margin-bottom: 30px;
-            font-size: 24px;
-            color: #333;
-            text-align: center;
-        }
-
         .button-container {
-            display: flex;
-            flex-direction: row;
+            position: fixed;
+            bottom: env(safe-area-inset-bottom);
             width: 100%;
             max-width: 400px; /* Limits the maximum width on larger screens */
         }
@@ -42,15 +18,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            flex: 1; /* Ensures button takes full space */
             height: 50px;
-            margin: 0 10px;
+            margin: 20px;
+            font-family: Arial, Helvetica, sans-serif;
             font-size: 16px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             color: #fff;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color 0.3s ease;
             text-decoration: none;
             overflow: hidden; /* Ensures content doesn't overflow */
             background-color: #4CAF50;
@@ -58,7 +34,6 @@
 
         .upload-button:hover {
             background-color: #45a049;
-            transform: translateY(-2px);
         }
 
         .button-container input {
@@ -74,11 +49,6 @@
 
         /* Responsive Adjustments for Very Small Screens */
         @media (max-width: 300px) {
-            .button-container {
-                flex-direction: row;
-                gap: 10px;
-            }
-
             .upload-button {
                 font-size: 14px;
                 height: 45px;
@@ -91,10 +61,27 @@
                 margin-right: 5px;
             }
         }
+
+        .img-container {
+            display: flex;
+            position: fixed;
+            top: 0;
+            bottom: env(safe-area-inset-bottom);
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 70px;
+        }
+        #featured-img {
+            max-height: calc(90vh - 77px);
+        }
     </style>
 </head>
 <body>
-    <h1>Upload Your Photo</h1>
+    <div class="img-container">
+        <img id="featured-img" src="/static/uploads/1730714175__WhatsApp%20Image%202024-11-02%20at%2018.05.00.jpeg" class="visible" alt="Featured Photo">
+    </div>
+
     <div class="button-container">
         <!-- Upload Image Button -->
         <label for="upload-input" class="upload-button">
