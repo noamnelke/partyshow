@@ -1,23 +1,13 @@
-export const loggingEnabled = false; // Set to true to enable logging
-
-export function log(...args) {
-    if (loggingEnabled) {
-        console.log(...args);
-    }
-}
-
 /**
  * Preloads an image and updates the specified element upon successful loading.
  * @param {Object} photo - The photo object containing 'path' and 'filename'.
  * @param {HTMLElement} element - The HTML element to update with the photo.
  */
 export function showFeaturedPhoto(photo, element) {
-    log('Preloading photo:', photo.path);
     const img = new Image();
     img.src = photo.path;
 
     img.onload = () => {
-        log('Photo loaded:', photo.path);
         // Remove 'visible' class to initiate fade-out
         element.classList.remove('visible');
 
@@ -56,12 +46,10 @@ export function startSlideshow(element, photoQueue, newPhotos, displayDuration) 
 
     function displayNextPhoto() {
         if (!slideshowRunning) {
-            log('Slideshow has been stopped.');
             return;
         }
 
         if (photoQueue.length === 0 && newPhotos.length === 0) {
-            log('Photo queues are empty. Slideshow not started.');
             return;
         }
 
@@ -74,7 +62,6 @@ export function startSlideshow(element, photoQueue, newPhotos, displayDuration) 
             currentFeaturedIndex = (currentFeaturedIndex + 1) % photoQueueLength;
         }
 
-        log('Starting slideshow with photo:', nextPhoto);
         showFeaturedPhoto(nextPhoto, element);
         setTimeout(displayNextPhoto, displayDuration);
 

@@ -1,4 +1,4 @@
-import { startSlideshow, log } from './slideshow.js'; // Import the slideshow function
+import { startSlideshow } from './slideshow.js'; // Import the slideshow function
 
 const displayDuration = 5000; // Set the display duration for each photo
 
@@ -19,7 +19,6 @@ async function fetchPhotoQueue() {
             throw new Error('Network response was not ok. Status: ' + response.status);
         }
         const json_response = await response.json();
-        log('Fetched photo queue:', json_response);
         const photoQueue = json_response['photo_queue'];
         const element = document.getElementById('featured-img');
         startSlideshow(element, photoQueue, [], displayDuration); // Start the slideshow with the fetched data

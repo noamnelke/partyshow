@@ -1,10 +1,9 @@
-import { log, showFeaturedPhoto, startSlideshow } from './slideshow.js';
+import { startSlideshow } from './slideshow.js';
 
 // Connect to the specified namespace
 const socket = io('/', { path: '/socket.io' });
 
-let photoQueue = [];
-let newPhotos = [];
+const newPhotos = [];
 const displayDuration = 15000; // 15 seconds in milliseconds
 
 const featuredImg = document.getElementById('featured-img');
@@ -15,7 +14,6 @@ const bubblesContainer = document.getElementById('bubbles-container');
  * @param {Object} photo - The photo object containing 'path' and 'filename'.
  */
 export function addBubble(photo) {
-    log('Adding bubble for photo:', photo.path);
     const img = new Image();
     img.src = photo.path;
 
@@ -42,15 +40,9 @@ export function addBubble(photo) {
 }
 window.addBubble = addBubble;
 
-// Initial connection to the server
-socket.on('connect', () => {
-    log('Connected to server');
-});
-
 // Receive the initial state containing the photo queue
 socket.on('initial_state', data => {
-    log('Received initial state:', data);
-    photoQueue = data.photo_queue;
+    const photoQueue = data.photo_queue;
     if (photoQueue.length > 0) {
         startSlideshow(featuredImg, photoQueue, newPhotos, displayDuration);
     }
@@ -58,22 +50,11 @@ socket.on('initial_state', data => {
 
 // Receive new photos in real-time
 socket.on('new_photo', photo => {
-    log('Received new photo:', photo);
     newPhotos.push(photo);
     addBubble(photo);
-    if (photoQueue.length === 0 && newPhotos.length === 1) {
-        startSlideshow(featuredImg, photoQueue, newPhotos, displayDuration);
+    if (!window.stopSlideshow) {
+        startSlideshow(featuredImg, [], newPhotos, displayDuration);
     }
-});
-
-// Handle disconnections gracefully
-socket.on('disconnect', () => {
-    log('Disconnected from server. Attempting to reconnect...');
-});
-
-// Optionally, handle reconnection events
-socket.on('reconnect', (attemptNumber) => {
-    log('Reconnected to server after', attemptNumber, 'attempt(s)');
 });
 
 let idleTimeout;
