@@ -73,16 +73,23 @@ document.addEventListener('keydown', resetIdleTimer);
 resetIdleTimer(); // Initialize the timer on page load
 
 // QR Code Generation
-function generateQR(id, value) {
-    var qr = new QRious({
-        element: document.getElementById(id),
+function generateQR(element, value) {
+    new QRious({
+        element: element,
         value: value,
         size: 1000,
         background: 'black',
         backgroundAlpha: 0,
         foreground: 'gold',
     });
+    if (value.substring(0, 4) === 'http') {
+        element.addEventListener('click', () => {
+            window.open(value, '_blank');
+        });
+        element.style.cursor = 'pointer';
+    }
+    element.title = value;
 };
 
-generateQR('qr-upload', 'https://partyshow.xyz/upload');
-generateQR('qr-wifi', 'WIFI:T:WPA;S:Honeypot;P:050-7700593;');
+generateQR(document.getElementById('qr-upload'), window.location.href + 'upload');
+generateQR(document.getElementById('qr-wifi'), 'WIFI:T:WPA;S:Honeypot;P:050-7700593;');
