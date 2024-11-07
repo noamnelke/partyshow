@@ -4,6 +4,11 @@ const displayDuration = 5000; // Set the display duration for each photo
 
 // Function to submit the form when a file is selected
 function handleInputChange(event) {
+    const button = document.getElementById('upload-button');
+    button.disabled = true;
+    button.textContent = 'Uploading...';
+    button.classList.add('pulsate');
+
     const form = document.getElementById('upload-form');
     form.submit();
 }

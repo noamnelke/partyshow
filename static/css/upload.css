@@ -27,6 +27,21 @@
     background-color: #45a049;
 }
 
+.upload-button.pulsate {
+    animation: pulsate 1s infinite;
+    background-color: gray;
+}
+
+@keyframes pulsate {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.upload-button:disabled {
+    cursor: not-allowed;
+}
+
 .button-container input {
     display: none; /* Hides the actual file input elements */
 }
