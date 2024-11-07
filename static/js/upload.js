@@ -1,4 +1,4 @@
-import { startSlideshow } from './slideshow.js'; // Import the slideshow function
+import { startSlideshow } from './slideshow.js';
 
 const displayDuration = 5000; // Set the display duration for each photo
 
@@ -11,21 +11,10 @@ function handleInputChange(event) {
 // Attach event listener to the file input
 document.getElementById('upload-input').addEventListener('change', handleInputChange);
 
-// Function to fetch the photo queue
-async function fetchPhotoQueue() {
-    try {
-        const response = await fetch('/queue');
-        if (!response.ok) {
-            throw new Error('Network response was not ok. Status: ' + response.status);
-        }
-        const json_response = await response.json();
-        const photoQueue = json_response['photo_queue'];
-        const element = document.getElementById('featured-img');
-        startSlideshow(element, photoQueue, [], displayDuration); // Start the slideshow with the fetched data
-    } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
-    }
+async function setupSlideshow() {
+    const element = document.getElementById('featured-img');
+    startSlideshow(element, window.photoQueue, window.newPhotos, displayDuration);
 }
 
-// Fetch the photo queue when the page loads
-document.addEventListener('DOMContentLoaded', fetchPhotoQueue);
+// Setup the slideshow when the page loads
+document.addEventListener('DOMContentLoaded', setupSlideshow);

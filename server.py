@@ -52,6 +52,8 @@ def upload():
         if 'photos' not in request.files:
             return redirect(request.url)
         files = request.files.getlist('photos')
+        new_photos = []
+        photo_queue_snapshot = photo_queue.copy()
         for file in files:
             if file.filename == '':
                 continue
@@ -64,15 +66,12 @@ def upload():
                 file.save(filepath)
                 photo = {'filename': unique_filename, 'path': '/' + quote(filepath)}
                 photo_queue.append(photo)
+                new_photos.append(photo)
                 emit('new_photo', photo, broadcast=True, namespace='/')
             else:
                 print("Invalid file type attempted to be uploaded.")
-        return redirect(url_for('upload'))
-    return render_template('upload.html')
-
-@app.route('/queue')
-def queue():
-    return {'photo_queue': [photo_queue[-1]] + photo_queue[:-1] if photo_queue else []}
+        return render_template('upload.html', photo_queue=photo_queue_snapshot, new_photos=new_photos)
+    return render_template('upload.html', photo_queue=photo_queue, new_photos=[])
 
 @socketio.on('connect', namespace='/')
 def handle_connect():

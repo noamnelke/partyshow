@@ -6,7 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"> <!-- Ensures proper scaling on mobile -->
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/upload.css') }}"> <!-- Link to the new CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/upload.css') }}">
+    <script>
+        window.photoQueue = {{ photo_queue | tojson }};
+        window.newPhotos = {{ new_photos | tojson }};
+    </script>
 </head>
 <body>
     <div class="img-container">
@@ -29,6 +33,6 @@
         </form>
     </div>
 
-    <script type="module" src="{{ url_for('static', filename='js/upload.js') }}"></script> <!-- Link to the new JS file as a module -->
+    <script type="module" src="{{ url_for('static', filename='js/upload.js') }}"></script>
 </body>
 </html>
