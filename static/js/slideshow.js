@@ -44,8 +44,22 @@ export function showFeaturedPhoto(photo, element) {
 export function startSlideshow(element, photoQueue, newPhotos, displayDuration) {
     let currentFeaturedIndex = 0;
     let photoQueueLength = photoQueue.length;
+    let slideshowRunning = true;
+
+    if (window.stopSlideshow) {
+        currentFeaturedIndex = window.stopSlideshow() % photoQueueLength;
+    }
+    window.stopSlideshow = () => {
+        slideshowRunning = false;
+        return currentFeaturedIndex;
+    };
 
     function displayNextPhoto() {
+        if (!slideshowRunning) {
+            log('Slideshow has been stopped.');
+            return;
+        }
+
         if (photoQueue.length === 0 && newPhotos.length === 0) {
             log('Photo queues are empty. Slideshow not started.');
             return;
